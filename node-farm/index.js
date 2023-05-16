@@ -1,6 +1,9 @@
 const fs = require("fs");
 const http = require("http");
 const url = require("url");
+
+const slugify = require("slugify");
+
 const replaceTemplate = require("./modules/replaceTemplate");
 
 //////////////////////
@@ -53,6 +56,13 @@ const tempProduct = fs.readFileSync(
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, "utf-8");
 const dataObject = JSON.parse(data); // parse the data to json format
 
+const slugs = dataObject.map((element) =>
+  slugify(element.productName, {
+    lower: true,
+  })
+);
+console.log(slugs);
+
 const server = http.createServer((req, res) => {
   // console.log(url.parse(req.url, true)); // true here is to parse the query
   const { query, pathname } = url.parse(req.url, true);
@@ -100,3 +110,5 @@ const server = http.createServer((req, res) => {
 server.listen(8000, "127.0.0.1", () => {
   console.log(`Listening to requests on Port 8000`);
 });
+
+// in package-json file, * accepts all version updates, ^ only accepts minor updates and ~ accepts patch updates
